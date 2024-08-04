@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String @unique
+  password String
+  refreshToken String?
+  validationToken String?
+  validationTokenExpiry DateTime?
+  validationDate DateTime?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("users")
+}
+
+model Movie {
+  id        Int          @id @default(autoincrement())
+  title  String
+  year   Int
+  poster String
+  imdbID    String      @unique
+  labels    MovieLabel[]
+  roles     Role[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("movies")
+}
+
+model Label {
+  id        Int          @id @default(autoincrement())
+  name      String       @unique
+  Movie     MovieLabel[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("labels")
+}
+
+model MovieLabel {
+  movieId Int
+  labelId Int
+  movie   Movie @relation(fields: [movieId], references: [id])
+  label   Label @relation(fields: [labelId], references: [id])
+
+  @@id(name: "movie_label", fields: [movieId, labelId])
+  @@map("movies_labels")
+}
+
+model Person {
+  id        Int       @id @default(autoincrement())
+  fullname  String    @unique
+  realname  String?   @unique
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  Role      Role[]
+
+  @@map("people")
+}
+
+model Job {
+  id    Int    @id @default(autoincrement())
+  title String @unique
+  roles Role[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("jobs")
+}
+
+model Role {
+  id       Int @id @default(autoincrement())
+  movieId  Int
+  personId Int
+  jobId    Int
+
+  Movie  Movie  @relation(fields: [movieId], references: [id])
+  Person Person @relation(fields: [personId], references: [id])
+  Job    Job    @relation(fields: [jobId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@unique([movieId, personId, jobId]) // Ensure that each combination is unique
+  @@map("roles")
+}

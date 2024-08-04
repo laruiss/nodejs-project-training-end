@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:16.2-bullseye
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      DB_USER: <username>
+      DB_PASS: <password>
+      DB_NAME: media
+      SHADOW_DB_NAME: shadow_media
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./db-data:/var/lib/postgresql/data/pgdata
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - '8080:8080'
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+    restart: unless-stopped
+    volumes:
+      - ./mailpit-data:/data
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1

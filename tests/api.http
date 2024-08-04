@@ -1,0 +1,172 @@
+@omdbApiUrl = https://www.omdbapi.com/?apikey={{omdbApiKey}}
+
+@searchOmdbUrl = {{omdbApiUrl}}&s=
+@mediaOmdbUrl = {{omdbApiUrl}}&i=
+
+@baseUrl = http://localhost:3000
+@omdbBaseUrl = http://localhost:3000/omdb
+
+@searchUrl = {{omdbBaseUrl}}/media?s=
+@idUrl = {{omdbBaseUrl}}/media/
+
+
+###
+
+POST {{baseUrl}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "stannis",
+    "email": "stan@stormier.fr",
+    "password": "53CR37p455W0RD!"
+}
+
+###
+# @name login
+POST {{baseUrl}}/auth/tokens HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "stan@stormier.fr",
+    "password": "53CR37p455W0RD3!"
+}
+
+
+###
+GET {{baseUrl}}/users HTTP/1.1
+Authorization: Bearer {{login.response.body.token}}
+
+###
+# @name search
+{{searchUrl}}love
+Authorization: Bearer {{login.response.body.token}}
+
+###
+# @name getMediaFromOmdb
+{{mediaOmdbUrl}}tt1570728
+
+###
+# @name omdbSearch
+{{searchOmdbUrl}}love
+Authorization: Bearer {{login.response.body.token}}
+
+###
+{{idUrl}}{{omdbSearch.response.body.Search.0.imdbID}}
+Authorization: Bearer {{login.response.body.token}}
+
+###
+# @name refresh
+GET {{baseUrl}}/auth/new-tokens HTTP/1.1
+
+###
+GET {{baseUrl}}/users HTTP/1.1
+Authorization: Bearer {{refresh.response.body.token}}
+
+###
+
+PUT {{baseUrl}}/users/2/validationDate?token=16f08d1c-2d02-4568-a384-915d92a9333b HTTP/1.1
+
+###
+
+POST {{baseUrl}}/auth/password-reset HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "stan@stormier.fr"
+}
+
+###
+
+PUT {{baseUrl}}/users/2/password?token=64b4c9e9-e4a4-4641-a4f6-6af97f22e55f HTTP/1.1
+Content-Type: application/json
+
+{
+    "password": "53CR37p455W0RD3!"
+}
+
+###
+GET {{baseUrl}}/users/1 HTTP/1.1
+
+###
+PATCH {{baseUrl}}/users/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "bobby@stormier.ninja"
+}
+
+
+###
+
+# @name search
+{{searchOmdbUrl}}love
+
+###
+
+{{idUrl}}{{search.response.body.Search.0.imdbID}}
+
+###
+
+
+{{mediaOmdbUrl}}{{search.response.body.Search.1.imdbID}}
+
+###
+
+POST {{baseUrl}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "stan@stan.com",
+  "username": "stanislas",
+  "password": "S3CR37p455!"
+}
+
+###
+{{baseUrl}}/users
+
+###
+{{baseUrl}}/users/1
+
+### 
+POST {{baseUrl}}/movies
+Content-Type: application/json
+
+{
+  "imdbID": "tt1570728"
+}
+
+
+### 
+GET {{baseUrl}}/movies
+
+### 
+GET {{baseUrl}}/movies/1
+
+### 
+GET {{baseUrl}}/labels
+
+### 
+POST {{baseUrl}}/labels
+Content-Type: application/json
+
+{
+  "name": "science fiction"
+}
+
+###
+POST {{baseUrl}}/movies/1/labels
+Content-Type: application/json
+
+{
+  "name": "science fiction"
+}
+
+###
+DELETE {{baseUrl}}/movies/1/labels/1
+
+
+### 
+GET {{baseUrl}}/labels?q=science
+
+###
+GET {{baseUrl}}/labels?q=science

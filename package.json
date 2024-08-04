@@ -1,0 +1,53 @@
+{
+  "name": "media-api",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "RESTful API for movies and series",
+  "author": "Stanislas Ormières <stan@stormier.ninja>",
+  "license": "ISC",
+  "keywords": [
+    "media",
+    "movies",
+    "series"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "docker:up": "docker compose -f .docker/docker-compose.yml up -d",
+    "start": "NODE_ENV=production node dist/index.js",
+    "dev": "VITE_NODE_DEBUG_RUNNER=true nodemon --watch src --exec 'vite-node src/index.ts'",
+    "build": "tsc",
+    "lint": "eslint . ",
+    "prisma": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:migrate": "prisma migrate dev --name "
+  },
+  "dependencies": {
+    "@fastify/cookie": "^9.3.1",
+    "@fastify/cors": "^9.0.1",
+    "@fastify/helmet": "^11.1.1",
+    "@fastify/jwt": "^8.0.1",
+    "@fastify/swagger": "^8.14.0",
+    "@fastify/swagger-ui": "^4.0.0",
+    "@prisma/client": "5.17.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "fastify-plugin": "^4.5.1",
+    "fastify-type-provider-zod": "^2.0.0",
+    "nodemailer": "^6.9.14",
+    "prisma": "^5.17.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.22.4",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20.14.11",
+    "@types/nodemailer": "^6.4.15",
+    "eslint": "^9.7.0",
+    "nodemon": "^3.1.4",
+    "pino-pretty": "^11.2.2",
+    "typescript": "^5.5.3",
+    "vite-node": "^2.0.3"
+  }
+}
